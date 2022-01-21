@@ -13,7 +13,6 @@ Notes:
 
 ******************************************************
 		      Instructions
-		      **OUTDATED**
 ******************************************************
 
 1. Use the items.csv file to add items to the agenda,
