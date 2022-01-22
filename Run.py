@@ -24,7 +24,7 @@ with open('Setup.txt', encoding = 'utf8') as f:
         
             Info[line.split(': ')[0]] = line.split(': ')[1]
 
-print (Info)
+
 
 if Info["Notes"] == "Random":
 
@@ -41,6 +41,32 @@ def Save(Dict):
         for key, value in Dict.items():
             line = key + ": " + value + "\n"
             f.write(line)
+
+def Item_Rows_Current():
+
+    Items_Dict = htmlgen.Get_Items()
+    column = {}
+
+    column["New Item"] = {"section": "new", "name": "", "date": "dd/mm/yyyy", "motion": "FALSE", "event": "FALSE", "fw": "", "resolved": "FALSE"}
+    
+    for item in Items_Dict:
+    
+        column[item["name"]] = item
+
+    return column
+
+Items_Dict = Item_Rows_Current()
+
+Current_List = []
+
+for key in Items_Dict.keys():
+
+    if Items_Dict[key]["resolved"] == "FALSE":
+    
+        Current_List.append(key)
+
+
+
 
 Welcome = [
     [sg.Text("Welcome to the IWW Minutes Generator! \n Please select an option below to get started:")], 
@@ -82,7 +108,7 @@ def Interwob_Login():
     
 
 Agenda = [
-    []
+    [sg.Listbox(values = Current_List, size = (50, 50), enable_events=True, key = '-Selected_Item-')]
     ]
 
 Html_gen = [
@@ -104,40 +130,107 @@ Help = [
     []
     ]
 
-layout = [[sg.Button("<")],[
-    
-    sg.Column(Welcome, key = '-Welcome-'), 
-    sg.Column(Setup, visible = False, key = '-Setup Options-'),
-    sg.Column(Agenda, visible = False, key = '-Agenda Items-'),
-    sg.Column(Html_gen, visible = False, key = '-Generate HTML-'),
-    sg.Column(Pdf_gen, visible = False, key = '-Generate PDF-'),
-    sg.Column(Archive, visible = False, key = '-Archive-'),
-    sg.Column(Help, visible = False, key = '-Help-'),
-    sg.Column(Test, visible = False, key = '-Test-')]
-    
+Col2_Welcome = [
+    [sg.Text("bar")]
     ]
 
-window = sg.Window(title = Welcome_Title, layout = layout, size = (600,600))
+Col2_Setup = [
+    []
+    ]
+
+Selected_Item = Items_Dict["New Item"]
+
+Col2_Agenda = [
+    [sg.Text("Name of Item")],
+    [sg.Input(Selected_Item["name"], key = 'Agenda-0-')],
+    [sg.Text("Date First Proposed")],
+    [sg.Input(Selected_Item["date"], key = 'Agenda-1-')],
+    [sg.Text("Section")],
+    [sg.Combo(["Old Business", "New Business"], default_value = Selected_Item["section"], key = 'Agenda-2-')],
+    [sg.Checkbox("Motion", default = Selected_Item["motion"] == "TRUE", key = 'Agenda-3-')],
+    [sg.Checkbox("Event", default = Selected_Item["event"] == "TRUE", key = 'Agenda-4-')],
+    [sg.Text("Proposed by:")],
+    [sg.Input(Selected_Item["fw"], key = 'Agenda-5-')],
+    [sg.Button("Save", key = "-Save_Item-")],
+    [sg.Button("Mark as Resolved", key = "-Resolved-")],
+    [sg.Button("Delete", key = "-Delete_Item-")]
+    ]
+    
+Col2_Html_gen = [
+    [sg.Text("bar")]
+    ]
+    
+Col2_Pdf_gen = [
+    [sg.Text("bar")]
+    ]
+
+Col2_Archive = [
+    [sg.Text("bar")]
+    ]
+    
+Col2_Help = [
+    [sg.Text("bar")]
+    ]
+    
+Col2_Test = [
+    []
+    ]
+    
+layout = [
+    [[sg.Button("<")]],
+    [[sg.Column(
+        [[
+            sg.Column(Welcome, key = '-Welcome-'), 
+            sg.Column(Setup, visible = False, key = '-Setup Options-'),
+            sg.Column(Agenda, visible = False, key = '-Agenda Items-'),
+            sg.Column(Html_gen, visible = False, key = '-Generate HTML-'),
+            sg.Column(Pdf_gen, visible = False, key = '-Generate PDF-'),
+            sg.Column(Archive, visible = False, key = '-Archive-'),
+            sg.Column(Help, visible = False, key = '-Help-'),
+            sg.Column(Test, visible = False, key = '-Test-')
+            ]], size = (400,600)),
+    sg.VSeperator(),
+    sg.Column(    
+        [[
+            sg.Column(Col2_Welcome, visible = True, key = 'Col2_-Welcome-'),
+            sg.Column(Col2_Setup, visible = False, key = 'Col2_-Setup Options-'),
+            sg.Column(Col2_Agenda, visible = False, key = 'Col2_-Agenda Items-'),
+            sg.Column(Col2_Html_gen, visible = False, key = 'Col2_-Generate HTML-'),
+            sg.Column(Col2_Pdf_gen, visible = False, key = 'Col2_-Generate PDF-'),
+            sg.Column(Col2_Archive, visible = False, key = 'Col2_-Archive-'),
+            sg.Column(Col2_Help, visible = False, key = 'Col2_-Help-'),
+            sg.Column(Col2_Test, visible = False, key = 'Col2_-Test-')
+            ]], size = (400,600))
+        ]]]
+    
+
+window = sg.Window(title = Welcome_Title, layout = layout, size = (800,600))
 
 def Main_Menu():
     
     layout = 'Welcome'
     
+    Selected_Item = Items_Dict["New Item"]
+    
     while True:
         
         event, values = window.read()
-        print(event)
+        #print(event)
         if layout == 'Welcome':
         
             if event != '>' and event != sg.WIN_CLOSED:
                 
                 window[f'-{layout}-'].update(visible=False)
                 
+                window[f'Col2_-{layout}-'].update(visible=False)
+                
                 last = layout
                 
                 layout = event
                 
                 window[f'-{layout}-'].update(visible=True)
+                
+                window[f'Col2_-{layout}-'].update(visible=True)
                 
         elif layout == "Setup Options":
         
@@ -182,6 +275,75 @@ def Main_Menu():
                 event = "None"
                 login_window.close()
         
+        elif layout == 'Agenda Items':
+        
+            if event == "-Selected_Item-":
+                
+                Selected_Item = Items_Dict[values["-Selected_Item-"][0]]
+                window['Agenda-0-'].update(Selected_Item["name"])
+                window['Agenda-1-'].update(Selected_Item["date"])
+                window['Agenda-2-'].update(Selected_Item["section"])
+                window['Agenda-3-'].update(Selected_Item["motion"]==True)
+                window['Agenda-4-'].update(Selected_Item["event"]==True)
+                window['Agenda-5-'].update(Selected_Item["fw"])
+
+            elif event == '-Save_Item-':
+            
+                if values['Agenda-3-'] == True:
+                        
+                        Event_Temp = "TRUE"
+                        
+                else:
+                    
+                        Event_Temp = "FALSE"
+                        
+                if values['Agenda-4-'] == True:
+                    
+                        Motion_Temp = "TRUE"
+            
+                else:
+                    
+                        Motion_Temp = "FALSE"
+                
+            
+                if Selected_Item == Items_Dict["New Item"]:
+               
+                    Items_Dict[values['Agenda-0-']] = {
+                    
+                        "name": values['Agenda-0-'],
+                        "date": values['Agenda-1-'],
+                        "section": values['Agenda-2-'],
+                        "motion": Motion_Temp,
+                        "event": Event_Temp,
+                        "fw": values['Agenda-5-'],
+                        "resolved": "FALSE"
+                        }
+                        
+                    Current_List.insert(1, values['Agenda-0-'])
+                
+                    Selected_Item = Items_Dict[values['Agenda-0-']]
+                
+                
+                  
+                else:
+                
+                    Items_Dict[Selected_Item["name"]] = {
+                    
+                        "name": values['Agenda-0-'],
+                        "date": values['Agenda-1-'],
+                        "section": values['Agenda-2-'],
+                        "motion": Motion_Temp,
+                        "event": Event_Temp,
+                        "fw": values['Agenda-5-'],
+                        "resolved": "FALSE"
+                        }
+                        
+                    Current_List.insert(1, values['Agenda-0-'])
+                
+                    Selected_Item = Items_Dict[values['Agenda-0-']]
+                  
+                window['-Selected_Item-'].update(Current_List)
+                  
         elif layout == 'Generate HTML':
         
             if event == "Generate_HTML":
@@ -214,9 +376,11 @@ def Main_Menu():
             
                 Test2()
 
-        if event == '<':
+        if event == '<' and layout != "Welcome":
         
             window[f'-{layout}-'].update(visible=False)
+            
+            window[f'Col2_-{layout}-'].update(visible=False)
             
             temp = layout
             
@@ -228,6 +392,7 @@ def Main_Menu():
             
             window[f'-{layout}-'].update(visible=True)
 
+            window[f'Col2_-{layout}-'].update(visible=True)
         
         elif event == sg.WIN_CLOSED:
         

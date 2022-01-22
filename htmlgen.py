@@ -3,26 +3,9 @@ import os
 from datetime import datetime
 from random import *
 
-def Generate(Name, NoteTaker):
+def Get_Items():
 
-    title = Name
-    today = datetime.today().strftime('%Y-%m-%d')
-
-
-    #Reading items.csv and creating a dictionary
     Items_Dict = []
-    steno = ""
-
-    if NoteTaker == "Random":
-
-        with open('stenographer.txt') as f:
-
-            lines = [line.rstrip() for line in f]
-            steno = lines[randrange(0, len(lines)-1)]
-
-    else:
-    
-        steno = "NoteTaker"
 
     try:
         with open('items.csv', 'r', encoding='ANSI') as file:
@@ -42,6 +25,31 @@ def Generate(Name, NoteTaker):
             for row in list(csv_file):
         
                 Items_Dict.append(dict(row))
+
+    return Items_Dict
+
+def Generate(Name, NoteTaker):
+
+    title = Name
+    today = datetime.today().strftime('%Y-%m-%d')
+
+
+    #Reading items.csv and creating a dictionary
+    
+    steno = ""
+
+    if NoteTaker == "Random":
+
+        with open('stenographer.txt') as f:
+
+            lines = [line.rstrip() for line in f]
+            steno = lines[randrange(0, len(lines)-1)]
+
+    else:
+    
+        steno = "NoteTaker"
+
+    Items_Dict = Get_Items()
 
 
     #Sorting items into Old and New Business
