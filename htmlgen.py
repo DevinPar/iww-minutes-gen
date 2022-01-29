@@ -27,6 +27,34 @@ def Get_Items():
                 Items_Dict.append(dict(row))
 
     return Items_Dict
+def Save_Items(Dict):
+
+    with open ('items.csv', 'w') as fp:
+    
+        fp.write('section,name,date,motion,event,fw,resolved\n')
+    
+        for key, value in Dict.items():
+            
+            if key == "New Item":
+            
+                continue
+            
+            line = ''
+
+            for key, entry in value.items():
+
+                line = line + entry + ","
+                
+            line = line[:-1] + "\n"
+            fp.write(line)
+
+def Revert_Items():
+
+    with open ('items.csv', 'w') as fp:
+    
+        fp.write(r"""section,name,date,motion,event,fw,resolved
+old,Fundraiser,10/01/1001,FALSE,TRUE,Fu,FALSE
+new,Motion to motion motions,10/01/1001,TRUE,FALSE,Bar,TRUE""")
 
 def Generate(Name, NoteTaker):
 

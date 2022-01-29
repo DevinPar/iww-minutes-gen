@@ -24,8 +24,6 @@ with open('Setup.txt', encoding = 'utf8') as f:
         
             Info[line.split(': ')[0]] = line.split(': ')[1]
 
-
-
 if Info["Notes"] == "Random":
 
     Default_Note = ""
@@ -65,7 +63,13 @@ for key in Items_Dict.keys():
     
         Current_List.append(key)
 
+Old_List = []
 
+for key in Items_Dict.keys():
+
+    if Items_Dict[key]["resolved"] == "TRUE":
+    
+        Old_List.append(key)
 
 
 Welcome = [
@@ -80,11 +84,21 @@ Welcome = [
 
 def Test2():
 
-    print("Test")
+    for key, value in Items_Dict.items():
+            
+        line = ''
+
+        for key, entry in value.items():
+
+            line = line + entry + ", "
+            
+        line = line[:-2]
+        print(line)
 
 Test = [
     [sg.Button("Test1")],
-    [sg.Button("Test2")]
+    [sg.Button("Test2")],
+    [sg.Button("Revert")]
     ]
 
 Setup = [
@@ -108,8 +122,12 @@ def Interwob_Login():
     
 
 Agenda = [
-    [sg.Listbox(values = Current_List, size = (50, 50), enable_events=True, key = '-Selected_Item-')]
-    ]
+    [sg.TabGroup(
+        [[sg.Tab('New', 
+            [[sg.Listbox(values = Current_List, size = (50, 50), enable_events=True, key = '-Selected_Item-')]]),
+        sg.Tab('Old', 
+            [[sg.Listbox(values = Old_List, size = (50, 50), enable_events=True, key = '-Selected_Old-')]])]
+    ])]]
 
 Html_gen = [
     [sg.Text("Clicking 'Generate' below will create a file called RAW.html. To use, just send the RAW file to your note-taker to open in a browser.")],
@@ -146,14 +164,17 @@ Col2_Agenda = [
     [sg.Text("Date First Proposed")],
     [sg.Input(Selected_Item["date"], key = 'Agenda-1-')],
     [sg.Text("Section")],
-    [sg.Combo(["Old Business", "New Business"], default_value = Selected_Item["section"], key = 'Agenda-2-')],
+    [sg.Combo(["old", "new"], default_value = Selected_Item["section"], key = 'Agenda-2-')],
     [sg.Checkbox("Motion", default = Selected_Item["motion"] == "TRUE", key = 'Agenda-3-')],
     [sg.Checkbox("Event", default = Selected_Item["event"] == "TRUE", key = 'Agenda-4-')],
     [sg.Text("Proposed by:")],
     [sg.Input(Selected_Item["fw"], key = 'Agenda-5-')],
     [sg.Button("Save", key = "-Save_Item-")],
-    [sg.Button("Mark as Resolved", key = "-Resolved-")],
-    [sg.Button("Delete", key = "-Delete_Item-")]
+    [sg.Column([[
+        sg.Column([[sg.Button("Mark as Resolved", key = '-Resolved_Button-')]], key = "-Resolved-", visible = True),
+        sg.Column([[sg.Button("Mark as Unresolved", key = '-Unresolved_Button-')]], key = "-Unresolved-", visible = False)]])
+        ],
+    [sg.Button("Delete", key = "-Delete_Item-", visible = True)]
     ]
     
 Col2_Html_gen = [
@@ -286,64 +307,160 @@ def Main_Menu():
                 window['Agenda-3-'].update(Selected_Item["motion"]==True)
                 window['Agenda-4-'].update(Selected_Item["event"]==True)
                 window['Agenda-5-'].update(Selected_Item["fw"])
+                window['-Resolved-'].update(visible=True)
+                window['-Unresolved-'].update(visible=False)
+                window['-Save_Item-'].update(visible=True)
+                window['-Delete_Item-'].update(visible=True)
+                
+                if Selected_Item['name'] == '':
+                
+                    window['-Resolved-'].update(visible=False)
+                    window['-Delete_Item-'].update(visible=False)
 
+            elif event == "-Selected_Old-":
+            
+                Selected_Item = Items_Dict[values["-Selected_Old-"][0]]
+                window['Agenda-0-'].update(Selected_Item["name"])
+                window['Agenda-1-'].update(Selected_Item["date"])
+                window['Agenda-2-'].update(Selected_Item["section"])
+                window['Agenda-3-'].update(Selected_Item["motion"]==True)
+                window['Agenda-4-'].update(Selected_Item["event"]==True)
+                window['Agenda-5-'].update(Selected_Item["fw"])
+                window['-Unresolved-'].update(visible=True)
+                window['-Resolved-'].update(visible=False)
+                window['-Save_Item-'].update(visible=False)
+                window['-Delete_Item-'].update(visible=True)
+
+                if Selected_Item['name'] == '':
+                
+                    window['-Unresolved-'].update(visible=False)
+                    window['-Delete_Item-'].update(visible=False)
+            
             elif event == '-Save_Item-':
             
-                if values['Agenda-3-'] == True:
-                        
-                        Event_Temp = "TRUE"
-                        
-                else:
-                    
-                        Event_Temp = "FALSE"
-                        
-                if values['Agenda-4-'] == True:
-                    
-                        Motion_Temp = "TRUE"
-            
-                else:
-                    
-                        Motion_Temp = "FALSE"
+                if len(values['Agenda-0-']) > 0:
                 
             
-                if Selected_Item == Items_Dict["New Item"]:
-               
-                    Items_Dict[values['Agenda-0-']] = {
-                    
-                        "name": values['Agenda-0-'],
-                        "date": values['Agenda-1-'],
-                        "section": values['Agenda-2-'],
-                        "motion": Motion_Temp,
-                        "event": Event_Temp,
-                        "fw": values['Agenda-5-'],
-                        "resolved": "FALSE"
-                        }
+                    if values['Agenda-3-'] == True:
+                            
+                            Event_Temp = "TRUE"
+                            
+                    else:
                         
-                    Current_List.insert(1, values['Agenda-0-'])
-                
-                    Selected_Item = Items_Dict[values['Agenda-0-']]
-                
-                
-                  
-                else:
-                
-                    Items_Dict[Selected_Item["name"]] = {
-                    
-                        "name": values['Agenda-0-'],
-                        "date": values['Agenda-1-'],
-                        "section": values['Agenda-2-'],
-                        "motion": Motion_Temp,
-                        "event": Event_Temp,
-                        "fw": values['Agenda-5-'],
-                        "resolved": "FALSE"
-                        }
+                            Event_Temp = "FALSE"
+                            
+                    if values['Agenda-4-'] == True:
                         
-                    Current_List.insert(1, values['Agenda-0-'])
+                            Motion_Temp = "TRUE"
                 
-                    Selected_Item = Items_Dict[values['Agenda-0-']]
-                  
+                    else:
+                        
+                            Motion_Temp = "FALSE"
+                
+                    if Selected_Item == Items_Dict["New Item"]:
+                   
+                        Items_Dict[values['Agenda-0-']] = {
+                        
+                            "section": values['Agenda-2-'],
+                            "name": values['Agenda-0-'],
+                            "date": values['Agenda-1-'],
+                            "motion": Motion_Temp,
+                            "event": Event_Temp,
+                            "fw": values['Agenda-5-'],
+                            "resolved": "FALSE"
+                            }
+                            
+                        Current_List.insert(1, values['Agenda-0-'])
+                    
+                        Selected_Item = Items_Dict[values['Agenda-0-']]
+                    
+                    
+                      
+                    else:
+                    
+                        Items_Dict.pop(Selected_Item["name"])
+                    
+                        Items_Dict[values['Agenda-0-']] = {
+                        
+                            "section": values['Agenda-2-'],
+                            "name": values['Agenda-0-'],
+                            "date": values['Agenda-1-'],
+                            "motion": Motion_Temp,
+                            "event": Event_Temp,
+                            "fw": values['Agenda-5-'],
+                            "resolved": "FALSE"
+                            }
+                            
+                        Current_List.insert(Current_List.index(Selected_Item["name"]), values['Agenda-0-'])
+                        
+                        Current_List.remove(Selected_Item["name"])
+                    
+                        Selected_Item = Items_Dict[values['Agenda-0-']]
+                      
+                    window['-Selected_Item-'].update(Current_List)
+                    
+                    htmlgen.Save_Items(Items_Dict)
+                    
+            elif event == '-Resolved_Button-' and Selected_Item['name'] != '':            
+            
+                Selected_Item["resolved"] = "TRUE"
+                
+                Current_List.remove(Selected_Item["name"])
+                
+                Old_List.append(Selected_Item["name"])
+                
                 window['-Selected_Item-'].update(Current_List)
-                  
+                window['-Selected_Old-'].update(Old_List)
+                
+                htmlgen.Save_Items(Items_Dict)
+                
+                Selected_Item = Items_Dict["New Item"]
+                window['Agenda-0-'].update(Selected_Item["name"])
+                window['Agenda-1-'].update(Selected_Item["date"])
+                window['Agenda-2-'].update(Selected_Item["section"])
+                window['Agenda-3-'].update(Selected_Item["motion"]==True)
+                window['Agenda-4-'].update(Selected_Item["event"]==True)
+                window['Agenda-5-'].update(Selected_Item["fw"])
+                window['-Resolved-'].update(visible=True)
+                window['-Unresolved-'].update(visible=False)
+                window['-Save_Item-'].update(visible=True)
+                
+            elif event == '-Unresolved_Button-' and Selected_Item['name'] != '':            
+            
+                Selected_Item["resolved"] = "FALSE"
+                
+                Old_List.remove(Selected_Item["name"])
+                
+                Current_List.append(Selected_Item["name"])
+                
+                window['-Selected_Item-'].update(Current_List)
+                window['-Selected_Old-'].update(Old_List)
+                
+                htmlgen.Save_Items(Items_Dict)
+
+                if len(Old_List) > 0:
+                
+                    Selected_Item = Old_List[0]
+                    window['-Resolved-'].update(visible=False)
+                    window['-Unresolved-'].update(visible=True)
+                    window['-Save_Item-'].update(visible=False)
+                    
+                else:
+                
+                    Selected_Item = Items_Dict["New Item"]
+                    window['-Resolved-'].update(visible=True)
+                    window['-Unresolved-'].update(visible=False)
+                    window['-Save_Item-'].update(visible=True)
+                    
+                window['Agenda-0-'].update(Selected_Item["name"])
+                window['Agenda-1-'].update(Selected_Item["date"])
+                window['Agenda-2-'].update(Selected_Item["section"])
+                window['Agenda-3-'].update(Selected_Item["motion"]==True)
+                window['Agenda-4-'].update(Selected_Item["event"]==True)
+                window['Agenda-5-'].update(Selected_Item["fw"])
+                
+
+            
         elif layout == 'Generate HTML':
         
             if event == "Generate_HTML":
@@ -375,6 +492,29 @@ def Main_Menu():
             elif event == "Test2":
             
                 Test2()
+
+            elif event == "Revert":
+            
+                htmlgen.Revert_Items()
+                print(Current_List)
+                for key in Current_List:
+                
+                    Items_Dict.pop(key)
+                
+                Items_Dict['New Item'] = {'section': 'new', 'name': '', 'date': 'dd/mm/yyyy', 'motion': 'FALSE', 'event': 'FALSE', 'fw': '', 'resolved': 'FALSE'}
+                Items_Dict['Fundraiser'] = {'section': 'old', 'name': 'Fundraiser', 'date': '10/01/1001', 'motion': 'FALSE', 'event': 'TRUE', 'fw': 'Fu', 'resolved': 'FALSE'}
+                Items_Dict['Motion to motion motions'] = {'section': 'new', 'name': 'Motion to motion motions', 'date': '10/01/1001', 'motion': 'TRUE', 'event': 'FALSE', 'fw': 'Bar', 'resolved': 'TRUE'}
+                print(len(Current_List))
+                for i in range(len(Current_List)):
+                    Current_List.pop(0)
+                print(Current_List)
+                for key in Items_Dict.keys():
+
+                    if Items_Dict[key]["resolved"] == "FALSE":
+    
+                        Current_List.append(key)
+                print(Current_List)
+                Selected_Item = Items_Dict["New Item"]
 
         if event == '<' and layout != "Welcome":
         
