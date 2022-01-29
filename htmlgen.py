@@ -56,7 +56,7 @@ def Revert_Items():
 old,Fundraiser,10/01/1001,FALSE,TRUE,Fu,FALSE
 new,Motion to motion motions,10/01/1001,TRUE,FALSE,Bar,TRUE""")
 
-def Generate(Name, NoteTaker):
+def Generate(Name, NoteTaker="Random", Command="Both"):
 
     title = Name
     today = datetime.today().strftime('%Y-%m-%d')
@@ -225,10 +225,11 @@ def Generate(Name, NoteTaker):
     strlist.append('goodnotes')
     strlist.append('critnotes')
     strlist.append('miscnotes')
+    
+    if Command == "HTML" or Command == "Both":
+        with open('RAW.html', 'w') as fp: 
 
-    with open('RAW.html', 'w') as fp: 
-
-        fp.write(r"""
+            fp.write(r"""
       
 
       
@@ -602,14 +603,14 @@ strlist["endtime"] = r"""${endhour.value}""" + ":" + r"""${endminute.value}"""
 
 ''')
 
-        for i in strlist:
-        
-            if i != "present" and i != "roles" and i != "starttime" and i != "endtime":
-        
-                fp.write('' + i + ' = r"""${' + i + '.value}"""\n\n')
-                fp.write('strlist["' + i + '"] = ' + i + '\n\n')
+            for i in strlist:
+            
+                if i != "present" and i != "roles" and i != "starttime" and i != "endtime":
+            
+                    fp.write('' + i + ' = r"""${' + i + '.value}"""\n\n')
+                    fp.write('strlist["' + i + '"] = ' + i + '\n\n')
 
-        fp.write(r'''
+            fp.write(r'''
         
       `  
 
@@ -620,50 +621,51 @@ strlist["endtime"] = r"""${endhour.value}""" + ":" + r"""${endminute.value}"""
 
     </script>''')
 
-    with open('Agenda.txt', 'w') as fp:
+    if Command == "Agenda" or Command == "Both":
+        with open('Agenda.txt', 'w') as fp:
 
-        fp.write(title + ' Agenda\n______________________________________________________\n\n')
-        fp.write('Selection of the Chair\n\n')
-        fp.write('Selection of the Stenographer\n\n')
-        fp.write('Selection of the Time Keeper\n\n')
-        fp.write('Adoption of the Agenda\n\n')
-        fp.write('Land Acknowledgement\nWe acknowledge the history of this traditional Indigenous territory whose record significantly\nprecedes that of the European colonial settlers who displaced them centuries ago. We recognize\nthe significance of this land to its rightful inheritors who survived this displacement and\ncontinue to live here to this day. Whose cultural and spiritual practices have managed to\nsurvive in spite of colonialist attempts to erase them. As such, we would like recognize that\nwe are convening on unjustly stolen territory that rightfully belongs to the First Nations,\nMetis, and Inuit peoples of this continent.\n\n')
-        fp.write('Safer Spaces\nIf a member feels this policy is being/has been violated, the following steps should be taken:\n   1.Reference the policy to the whole group: for example, “In the IWW, we have a ‘Safer Space Policy’\n     that all members are mutually responsible to uphold. I feel this policy has been violated\n     by talk of ‘[comments made].’ Please keep the Safer Space Policy in mind.”\n   2.If the policy is still being violated, the issue should be brought up to the person in violation\n     directly and/or the chair,an officer, a delegate, or a member whom you would like to act as an\n     advocate on your behalf so that an effective plan of action can be instituted.\n   3.If you have no allies locally and invoking the ‘Safer Space Policy’ fails, reach out to the\n     Gender Equity Committee for assistanceat GEC@IWW.org.\nIf a member feels like this policy is being violated and is uncomfortable bringing this up personally,\n    they are encouraged to seek an ally of their choosing to advocate for them. In a meeting,\n    a person can ask for a point of personal privilege to take a break and\n    discuss this with the necessary parties. Meeting chairs, officers, delegates, and members\n    should be conscious of this policy and address issues as they arise.\n\n')
+            fp.write(title + ' Agenda\n______________________________________________________\n\n')
+            fp.write('Selection of the Chair\n\n')
+            fp.write('Selection of the Stenographer\n\n')
+            fp.write('Selection of the Time Keeper\n\n')
+            fp.write('Adoption of the Agenda\n\n')
+            fp.write('Land Acknowledgement\nWe acknowledge the history of this traditional Indigenous territory whose record significantly\nprecedes that of the European colonial settlers who displaced them centuries ago. We recognize\nthe significance of this land to its rightful inheritors who survived this displacement and\ncontinue to live here to this day. Whose cultural and spiritual practices have managed to\nsurvive in spite of colonialist attempts to erase them. As such, we would like recognize that\nwe are convening on unjustly stolen territory that rightfully belongs to the First Nations,\nMetis, and Inuit peoples of this continent.\n\n')
+            fp.write('Safer Spaces\nIf a member feels this policy is being/has been violated, the following steps should be taken:\n   1.Reference the policy to the whole group: for example, “In the IWW, we have a ‘Safer Space Policy’\n     that all members are mutually responsible to uphold. I feel this policy has been violated\n     by talk of ‘[comments made].’ Please keep the Safer Space Policy in mind.”\n   2.If the policy is still being violated, the issue should be brought up to the person in violation\n     directly and/or the chair,an officer, a delegate, or a member whom you would like to act as an\n     advocate on your behalf so that an effective plan of action can be instituted.\n   3.If you have no allies locally and invoking the ‘Safer Space Policy’ fails, reach out to the\n     Gender Equity Committee for assistanceat GEC@IWW.org.\nIf a member feels like this policy is being violated and is uncomfortable bringing this up personally,\n    they are encouraged to seek an ally of their choosing to advocate for them. In a meeting,\n    a person can ask for a point of personal privilege to take a break and\n    discuss this with the necessary parties. Meeting chairs, officers, delegates, and members\n    should be conscious of this policy and address issues as they arise.\n\n')
 
-        fp.write('Recognition\n\n')
-        fp.write('Announcements\n______________________________________________________\n\n')
-        
-        fp.write('Old Business\n\n')
-        
-        for i in Old_Business:
+            fp.write('Recognition\n\n')
+            fp.write('Announcements\n______________________________________________________\n\n')
             
-            fp.write(i['name'] + ' (FW ' + i['fw'] + ')\n')
-        
-            if i['date'] != "None":
+            fp.write('Old Business\n\n')
+            
+            for i in Old_Business:
                 
-                fp.write('First Presented ' + i['date'] + '\n')
-
-            fp.write('\n')
+                fp.write(i['name'] + ' (FW ' + i['fw'] + ')\n')
             
-        fp.write('______________________________________________________\n')
+                if i['date'] != "None":
+                    
+                    fp.write('First Presented ' + i['date'] + '\n')
 
-        fp.write('New Business\n\n')
-        
-        for i in New_Business:
-            
-            fp.write(i['name'] + ' (FW ' + i['fw'] + ')\n')
-        
-            if i['date'] != "None":
+                fp.write('\n')
                 
-                fp.write('First Presented ' + i['date'] + '\n')
+            fp.write('______________________________________________________\n')
 
-            fp.write('\n')
+            fp.write('New Business\n\n')
             
-        fp.write('______________________________________________________\n')
+            for i in New_Business:
+                
+                fp.write(i['name'] + ' (FW ' + i['fw'] + ')\n')
+            
+                if i['date'] != "None":
+                    
+                    fp.write('First Presented ' + i['date'] + '\n')
 
-        fp.write('Workplace Updates\n\n')
-        fp.write('Good and Welfare\n\n')
-        fp.write('Meeting Critique\n\n')
+                fp.write('\n')
+                
+            fp.write('______________________________________________________\n')
+
+            fp.write('Workplace Updates\n\n')
+            fp.write('Good and Welfare\n\n')
+            fp.write('Meeting Critique\n\n')
     
 if __name__ == '__main__':
     print(0)

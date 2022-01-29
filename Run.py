@@ -149,7 +149,7 @@ Help = [
     ]
 
 Col2_Welcome = [
-    [sg.Text("bar")]
+    []
     ]
 
 Col2_Setup = [
@@ -178,19 +178,19 @@ Col2_Agenda = [
     ]
     
 Col2_Html_gen = [
-    [sg.Text("bar")]
+    []
     ]
     
 Col2_Pdf_gen = [
-    [sg.Text("bar")]
+    []
     ]
 
 Col2_Archive = [
-    [sg.Text("bar")]
+    []
     ]
     
 Col2_Help = [
-    [sg.Text("bar")]
+    []
     ]
     
 Col2_Test = [
