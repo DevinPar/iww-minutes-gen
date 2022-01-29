@@ -2,59 +2,63 @@ import csv
 import os
 from datetime import datetime
 from random import *
+from functions import *
 
-def Get_Items():
+# def Get_Items():
 
-    Items_Dict = []
+    # Items_Dict = []
 
-    try:
-        with open('items.csv', 'r', encoding='ANSI') as file:
+    # try:
 
-            csv_file = csv.DictReader(file, quoting=csv.QUOTE_ALL)
-            
-            for row in list(csv_file):
-            
-                Items_Dict.append(dict(row))
-                
-    except:
+        # with open('items.csv', 'r', encoding='utf-8-sig') as file:
 
-        with open('items.csv', 'r', encoding='utf-8-sig') as file:
-
-            csv_file = csv.DictReader(file, quoting=csv.QUOTE_ALL)
+            # csv_file = csv.DictReader(file, quoting=csv.QUOTE_ALL)
         
-            for row in list(csv_file):
+            # for row in list(csv_file):
         
-                Items_Dict.append(dict(row))
+                # Items_Dict.append(dict(row))
 
-    return Items_Dict
-def Save_Items(Dict):
+    # except:
+        # with open('items.csv', 'r', encoding='ANSI') as file:
 
-    with open ('items.csv', 'w') as fp:
-    
-        fp.write('section,name,date,motion,event,fw,resolved\n')
-    
-        for key, value in Dict.items():
+            # csv_file = csv.DictReader(file, quoting=csv.QUOTE_ALL)
             
-            if key == "New Item":
+            # for row in list(csv_file):
             
-                continue
-            
-            line = ''
-
-            for key, entry in value.items():
-
-                line = line + entry + ","
+                # Items_Dict.append(dict(row))
                 
-            line = line[:-1] + "\n"
-            fp.write(line)
-
-def Revert_Items():
-
-    with open ('items.csv', 'w') as fp:
     
-        fp.write(r"""section,name,date,motion,event,fw,resolved
-old,Fundraiser,10/01/1001,FALSE,TRUE,Fu,FALSE
-new,Motion to motion motions,10/01/1001,TRUE,FALSE,Bar,TRUE""")
+
+    # return Items_Dict
+    
+# def Save_Items(Dict):
+
+    # with open ('items.csv', 'w') as fp:
+    
+        # fp.write('section,name,date,motion,event,fw,resolved\n')
+    
+        # for key, value in Dict.items():
+            
+            # if key == "New Item":
+            
+                # continue
+            
+            # line = ''
+
+            # for key, entry in value.items():
+
+                # line = line + entry + ","
+                
+            # line = line[:-1] + "\n"
+            # fp.write(line)
+
+# def Revert_Items():
+
+    # with open ('items.csv', 'w') as fp:
+    
+        # fp.write(r"""section,name,date,motion,event,fw,resolved
+# old,Fundraiser,10/01/1001,FALSE,TRUE,Fu,FALSE
+# new,Motion to motion motions,10/01/1001,TRUE,FALSE,Bar,TRUE""")
 
 def Generate(Name, NoteTaker="Random", Command="Both"):
 
@@ -77,7 +81,7 @@ def Generate(Name, NoteTaker="Random", Command="Both"):
     
         steno = "NoteTaker"
 
-    Items_Dict = Get_Items()
+    Items_Dict = Csv_to_Dict("items.csv")
 
 
     #Sorting items into Old and New Business
@@ -668,6 +672,5 @@ strlist["endtime"] = r"""${endhour.value}""" + ":" + r"""${endminute.value}"""
             fp.write('Meeting Critique\n\n')
     
 if __name__ == '__main__':
-    print(0)
+
     Generate("Ottawa-Outaouais IWW GMB")
-    #Agenda_Generate()

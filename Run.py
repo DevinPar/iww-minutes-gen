@@ -8,21 +8,11 @@ try:
 except:
     print("No Minutes")
 
+from functions import *
+
 Welcome_Title = "Minutes & Agenda Generator"
 
-Info = {}
-
-with open('Setup.txt', encoding = 'utf8') as f:
-
-    for line in f.readlines():
-    
-        if line.strip():
-        
-            if line[-1:] == '\n':
-            
-                line = line[:-1]
-        
-            Info[line.split(': ')[0]] = line.split(': ')[1]
+Info = Load_Settings()
 
 if Info["Notes"] == "Random":
 
@@ -31,46 +21,12 @@ if Info["Notes"] == "Random":
 else:
 
     Default_Note = Info["Notes"]
-
-def Save(Dict):
-        
-    with open('Setup.txt', 'w') as f:
     
-        for key, value in Dict.items():
-            line = key + ": " + value + "\n"
-            f.write(line)
+Items_Dict = Item_Rows_Current(Csv_to_Dict("items.csv"))
 
-def Item_Rows_Current():
+Current_List = List_Item_Keys(Items_Dict, "resolved", "FALSE")
 
-    Items_Dict = htmlgen.Get_Items()
-    column = {}
-
-    column["New Item"] = {"section": "new", "name": "", "date": "dd/mm/yyyy", "motion": "FALSE", "event": "FALSE", "fw": "", "resolved": "FALSE"}
-    
-    for item in Items_Dict:
-    
-        column[item["name"]] = item
-
-    return column
-
-Items_Dict = Item_Rows_Current()
-
-Current_List = []
-
-for key in Items_Dict.keys():
-
-    if Items_Dict[key]["resolved"] == "FALSE":
-    
-        Current_List.append(key)
-
-Old_List = []
-
-for key in Items_Dict.keys():
-
-    if Items_Dict[key]["resolved"] == "TRUE":
-    
-        Old_List.append(key)
-
+Old_List = List_Item_Keys(Items_Dict, "resolved", "TRUE")
 
 Welcome = [
     [sg.Text("Welcome to the IWW Minutes Generator! \n Please select an option below to get started:")], 
@@ -82,19 +38,6 @@ Welcome = [
     [sg.Button("Help")],
     [sg.Button("Test")]]
 
-def Test2():
-
-    for key, value in Items_Dict.items():
-            
-        line = ''
-
-        for key, entry in value.items():
-
-            line = line + entry + ", "
-            
-        line = line[:-2]
-        print(line)
-
 Test = [
     [sg.Button("Test1")],
     [sg.Button("Test2")],
@@ -104,34 +47,26 @@ Test = [
 Setup = [
     [sg.Text("Committee/Branch Name:")],
     [sg.Input(Info["Committee"], key = "-Committee Name-")],
-    [sg.Text("Note-Taker Title:")],
+    [sg.Text("Note-Taker Title:"),
+    sg.Checkbox("Random", default = Info["Notes"] == "Random", key = "-Random-", enable_events = True)],
     [sg.Input(Default_Note, key = "-Notes-", disabled = Info["Notes"] == "Random")],
-    [sg.Checkbox("Random", default = Info["Notes"] == "Random", key = "-Random-", enable_events = True)],
     [sg.Button("Save Settings")],
-    [sg.Button("Login to Interwob")]
+    [sg.Button("Login to Interwob", disabled = True)]
     ]
-
-def Interwob_Login():
-    Interwob_Login = [
-        [sg.Input("Username", key = "-Interwob_Username-")],
-        [sg.Input("Password", key = "-Interwob_Password-")],
-        [sg.Button("Save")],
-        [sg.Button("Cancel")]
-        ]
-    return Interwob_Login
     
-
 Agenda = [
     [sg.TabGroup(
-        [[sg.Tab('New', 
+        [[sg.Tab('Current', 
             [[sg.Listbox(values = Current_List, size = (50, 50), enable_events=True, key = '-Selected_Item-')]]),
-        sg.Tab('Old', 
+        sg.Tab('Resolved', 
             [[sg.Listbox(values = Old_List, size = (50, 50), enable_events=True, key = '-Selected_Old-')]])]
     ])]]
 
 Html_gen = [
     [sg.Text("Clicking 'Generate' below will create a file called RAW.html. To use, just send the RAW file to your note-taker to open in a browser.")],
-    [sg.Button("Generate", key = "Generate_HTML")]
+    [sg.Button("Generate HTML", key = "Generate_HTML")],
+    [sg.Button("Generate Agenda", key = "Generate_Agenda")],
+    [sg.Button("Generate Both", key = "Generate_Both")]
     ]
     
 Pdf_gen = [
@@ -170,10 +105,8 @@ Col2_Agenda = [
     [sg.Text("Proposed by:")],
     [sg.Input(Selected_Item["fw"], key = 'Agenda-5-')],
     [sg.Button("Save", key = "-Save_Item-")],
-    [sg.Column([[
-        sg.Column([[sg.Button("Mark as Resolved", key = '-Resolved_Button-')]], key = "-Resolved-", visible = True),
-        sg.Column([[sg.Button("Mark as Unresolved", key = '-Unresolved_Button-')]], key = "-Unresolved-", visible = False)]])
-        ],
+    [sg.Column([[sg.Button("Mark as Resolved", key = '-Resolved_Button-')]], key = "-Resolved-", visible = True, pad = (0,0)),
+     sg.Column([[sg.Button("Mark as Unresolved", key = '-Unresolved_Button-')]], key = "-Unresolved-", visible = False, pad = (0,0))],
     [sg.Button("Delete", key = "-Delete_Item-", visible = True)]
     ]
     
@@ -236,10 +169,10 @@ def Main_Menu():
     while True:
         
         event, values = window.read()
-        #print(event)
+        
         if layout == 'Welcome':
         
-            if event != '>' and event != sg.WIN_CLOSED:
+            if event != '<' and event != sg.WIN_CLOSED:
                 
                 window[f'-{layout}-'].update(visible=False)
                 
@@ -271,7 +204,7 @@ def Main_Menu():
                     
                     Info["Notes"] = values["-Notes-"]
                 
-                Save(Info)
+                Save_Settings(Info)
                 
             elif event == "Login to Interwob":
             
@@ -307,10 +240,18 @@ def Main_Menu():
                 window['Agenda-3-'].update(Selected_Item["motion"]==True)
                 window['Agenda-4-'].update(Selected_Item["event"]==True)
                 window['Agenda-5-'].update(Selected_Item["fw"])
+                
+                window['Agenda-0-'].update(disabled=False)
+                window['Agenda-1-'].update(disabled=False)
+                window['Agenda-2-'].update(disabled=False)
+                window['Agenda-3-'].update(disabled=False)
+                window['Agenda-4-'].update(disabled=False)
+                window['Agenda-5-'].update(disabled=False)
+                
                 window['-Resolved-'].update(visible=True)
                 window['-Unresolved-'].update(visible=False)
-                window['-Save_Item-'].update(visible=True)
-                window['-Delete_Item-'].update(visible=True)
+                window['-Save_Item-'].update(disabled=False)
+                window['-Delete_Item-'].update(disabled=False)
                 
                 if Selected_Item['name'] == '':
                 
@@ -326,10 +267,18 @@ def Main_Menu():
                 window['Agenda-3-'].update(Selected_Item["motion"]==True)
                 window['Agenda-4-'].update(Selected_Item["event"]==True)
                 window['Agenda-5-'].update(Selected_Item["fw"])
+                
+                window['Agenda-0-'].update(disabled=True)
+                window['Agenda-1-'].update(disabled=True)
+                window['Agenda-2-'].update(disabled=True)
+                window['Agenda-3-'].update(disabled=True)
+                window['Agenda-4-'].update(disabled=True)
+                window['Agenda-5-'].update(disabled=True)
+                
                 window['-Unresolved-'].update(visible=True)
                 window['-Resolved-'].update(visible=False)
-                window['-Save_Item-'].update(visible=False)
-                window['-Delete_Item-'].update(visible=True)
+                window['-Save_Item-'].update(disabled=True)
+                window['-Delete_Item-'].update(disabled=True)
 
                 if Selected_Item['name'] == '':
                 
@@ -340,7 +289,6 @@ def Main_Menu():
             
                 if len(values['Agenda-0-']) > 0:
                 
-            
                     if values['Agenda-3-'] == True:
                             
                             Event_Temp = "TRUE"
@@ -374,8 +322,6 @@ def Main_Menu():
                     
                         Selected_Item = Items_Dict[values['Agenda-0-']]
                     
-                    
-                      
                     else:
                     
                         Items_Dict.pop(Selected_Item["name"])
@@ -399,7 +345,7 @@ def Main_Menu():
                       
                     window['-Selected_Item-'].update(Current_List)
                     
-                    htmlgen.Save_Items(Items_Dict)
+                    Dict_to_Csv(Items_Dict, "items.csv")
                     
             elif event == '-Resolved_Button-' and Selected_Item['name'] != '':            
             
@@ -412,7 +358,7 @@ def Main_Menu():
                 window['-Selected_Item-'].update(Current_List)
                 window['-Selected_Old-'].update(Old_List)
                 
-                htmlgen.Save_Items(Items_Dict)
+                Dict_to_Csv(Items_Dict, "items.csv")
                 
                 Selected_Item = Items_Dict["New Item"]
                 window['Agenda-0-'].update(Selected_Item["name"])
@@ -436,7 +382,7 @@ def Main_Menu():
                 window['-Selected_Item-'].update(Current_List)
                 window['-Selected_Old-'].update(Old_List)
                 
-                htmlgen.Save_Items(Items_Dict)
+                Dict_to_Csv(Items_Dict, "items.csv")
 
                 if len(Old_List) > 0:
                 
@@ -459,11 +405,17 @@ def Main_Menu():
                 window['Agenda-4-'].update(Selected_Item["event"]==True)
                 window['Agenda-5-'].update(Selected_Item["fw"])
                 
-
-            
         elif layout == 'Generate HTML':
         
             if event == "Generate_HTML":
+            
+                htmlgen.Generate(Info["Committee"], Info["Notes"], "HTML")
+                
+            elif event == "Generate_Agenda":
+            
+                htmlgen.Generate(Info["Committee"], Info["Notes"], "Agenda")
+                
+            elif event == "Generate_Both":
             
                 htmlgen.Generate(Info["Committee"], Info["Notes"])
                 
@@ -491,11 +443,11 @@ def Main_Menu():
                 
             elif event == "Test2":
             
-                Test2()
+                Test2(Items_Dict)
 
             elif event == "Revert":
             
-                htmlgen.Revert_Items()
+                test.Revert_Items()
                 print(Current_List)
                 for key in Current_List:
                 
@@ -516,6 +468,9 @@ def Main_Menu():
                 print(Current_List)
                 Selected_Item = Items_Dict["New Item"]
 
+                window['-Selected_Item-'].update(Current_List)
+                window['-Selected_Old-'].update(Old_List)
+
         if event == '<' and layout != "Welcome":
         
             window[f'-{layout}-'].update(visible=False)
@@ -533,6 +488,7 @@ def Main_Menu():
             window[f'-{layout}-'].update(visible=True)
 
             window[f'Col2_-{layout}-'].update(visible=True)
+            
         
         elif event == sg.WIN_CLOSED:
         

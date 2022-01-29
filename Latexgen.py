@@ -3,6 +3,7 @@ import csv
 import os
 import importlib
 from datetime import datetime
+from functions import *
 
 for filename in os.listdir(r".\\"):
 
@@ -15,6 +16,7 @@ for filename in os.listdir(r".\\"):
     if "RAW.py" in filename:
     
         os.rename(filepath, 'RAW.py')
+
 
 from RAW import *
 
@@ -52,9 +54,6 @@ def Generate():
 
         if filename [-2:] == "py":
 
-            # print(filename)
-            # print(filename[0:-3])
-
             mod = importlib.import_module(filename[0:-3])
             
             if mod.title != " ":
@@ -70,25 +69,25 @@ def Generate():
     if report_count == 0:
         reports = ""
 
-    Items_Dict = []
-    memlist = []
+    Items_Dict = Csv_to_File("items.csv")
+    memlist = Csv_to_File("Members.csv")
     Replacements = {}
-    try:
-        with open('items.csv', 'r', encoding='ANSI') as file:
+    # try:
+        # with open('items.csv', 'r', encoding='ANSI') as file:
 
-            csv_file = csv.DictReader(file, quoting=csv.QUOTE_ALL)
+            # csv_file = csv.DictReader(file, quoting=csv.QUOTE_ALL)
             
-            for row in list(csv_file):
+            # for row in list(csv_file):
             
-                Items_Dict.append(dict(row))
+                # Items_Dict.append(dict(row))
                 
-    except:
+    # except:
 
-        with open('items.csv', 'r', encoding='utf-8-sig') as file:
+        # with open('items.csv', 'r', encoding='utf-8-sig') as file:
 
-            csv_file = csv.DictReader(file, quoting=csv.QUOTE_ALL)
+            # csv_file = csv.DictReader(file, quoting=csv.QUOTE_ALL)
         
-            for row in list(csv_file):
+            # for row in list(csv_file):
         
                 Items_Dict.append(dict(row))
 
@@ -99,7 +98,7 @@ def Generate():
             csv_file = csv.DictReader(file, quoting=csv.QUOTE_ALL)
         
             for row in list(csv_file):
-                #print(row)
+                
                 Replacements[row['word']] = row['replacement']
 
 
@@ -117,25 +116,24 @@ def Generate():
 
 
 
-    try:
-        with open('Members.csv', 'r', encoding='ANSI') as file:
+    # try:
+        # with open('Members.csv', 'r', encoding='ANSI') as file:
 
-
-            csv_file = csv.DictReader(file, quoting=csv.QUOTE_ALL)
+            # csv_file = csv.DictReader(file, quoting=csv.QUOTE_ALL)
             
-            for row in list(csv_file):
+            # for row in list(csv_file):
             
-                memlist.append(dict(row))
+                # memlist.append(dict(row))
             
-    except:
+    # except:
 
-        with open('Members.csv', 'r', encoding='utf-8-sig') as file:
+        # with open('Members.csv', 'r', encoding='utf-8-sig') as file:
 
-            csv_file = csv.DictReader(file, quoting=csv.QUOTE_ALL)
+            # csv_file = csv.DictReader(file, quoting=csv.QUOTE_ALL)
         
-            for row in list(csv_file):
+            # for row in list(csv_file):
            
-                memlist.append(dict(row))
+                # memlist.append(dict(row))
 
 
     for word in Replacements:
@@ -204,7 +202,7 @@ def Generate():
     for item in strlist.keys():
         
         if 'notes' in item or 'comment' in item:
-            #print(item)
+            
             for word in Replacements:
                 
                 strlist[item] = strlist[item].replace(word, Replacements[word])
@@ -300,8 +298,6 @@ def Generate():
 
         if 'result' in item:
         
-            #print(item)
-        
             if item['result'][0] == 0 and item['result'][1] == 0 and item['result'][2] == 0:
             
                 item['pass'] = 'NO VOTE'
@@ -331,7 +327,7 @@ def Generate():
         if len(name) >= 35:
         
             space = name[:32].rfind(" ")
-            #print(space)
+            
             name = name[:space] + "..."
 
         motion_glances += r"            \hyperlink{" + item["hyper"] + r"}{\textit{" + name + "}}\n\n            " + r"Result: \textbf{" + item['pass'] + r"}\\" + "\n\n"
@@ -360,15 +356,13 @@ def Generate():
     for item in New_Business:
 
         counter += 1
-        #print(counter)
+        
         newbiz += r"        \hypertarget{" + item["hyper"] + "}{\n" + r"        \subsection{" + item['name'] + " (FW " + item["fw"] + ")}}\n"
         if item['date'] != 'None':
             newbiz += "        First Presented " + item["date"] + "\n"
         newbiz += "\n" + item["notes"] + "\n\n"
         if 'result' in item:
             newbiz += r"\textit{VOTE}\\" + "\n        " + r"Yes: " + str(item["result"][0]) + r"\\" + "\n        " + r"No: " + str(item["result"][1]) + r"\\" + "\n        " + r"Abstain: " + str(item["result"][2]) + r"\\" + "\n        " + r"Motion \textbf{" + item["pass"] + "}\n\n"
-    
-    #print(1)
     
     try:
         if not chair:
@@ -380,8 +374,6 @@ def Generate():
         chair = "Fubar"
     
     with open(date + '_GMB-Business-Meeting-Minutes.tex', 'w') as fp:
-
-        #print(2)
 
         fp.write(r"""
     \documentclass[12pt]{meetingmins}

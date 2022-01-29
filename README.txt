@@ -13,61 +13,32 @@ Notes:
 
 ******************************************************
 		      Instructions
-			OUTDATED
 ******************************************************
 
-1. Use the items.csv file to add items to the agenda,
-   following the template:
+1. Open Run.exe 
 
-	"section" - old or new, depending if the item
-		    is old for new business. This may
-		    be changed later if the item is
-		    not resolved.
-	"name"    - name of the motion
-	"date"    - date the item was first presented
-		    dd/mm/yyyy
-	"motion"  - TRUE or FALSE, if the item is a
-		    motion requiring a vote
-	"event"   - TRUE or FALSE, if the item is an
-		    event, which will have it listed
-		    on the front page
-	"fw"	  - name of the FW(s) who presents 
-		    the item
-	"resolved"- mark initially as FALSE
-		    change this **after** the final
-		    minutes are generated. Items
-		    marked TRUE will not appear on
-		    future minutes
+2. Use the Setup option to fill in basic information,
+   such as the name of your branch/committee, and the
+   word you use for Note-Taker. Checking "Random" will
+   use a randomly chosen synonym for note-taker each
+   time you run the program.
 
-2. Open cmd in the MinutesStuff folder and run
-   "htmlgen.py". This will generate a file named
-   "Agenda.txt" which contains the meeting agenda,
-   as well as one named "RAW.html" which is the
-   html page you'll use to write the minutes. This
-   may be hosted on a server (untested) or simply
-   sent as a file to the minute-taker.
+3. Use the Agenda option to add, modify, or remove items
+   from the next meeting's agenda. To add an item, click
+   on "New Item" on the left, fill in the boxes on the
+   right, and click "Save".
 
-3. During the meeting, fill out the agenda in the
-   given fields. Ensure that votes and such are
-   recorded in the correct spots. Additional
-   sections may be added at the end. When finished,
-   press "Generate", which will download a .py file
-   containing the minutes. Place this file in the
-   MinutesStuff folder.
+4. Use the "Generate HTML" option to generate an HTML
+   file which will serve as your minutes note-pad.
+   Simply send the file to the note-taker and have them
+   fill it out during the meeting. When they are done,
+   they should press the "Generate" button at the bottom
+   and send you the resulting "[DATE]RAW.py" file. Place
+   this file in the same folder as Run.exe.
 
-4. The "replace.csv" file is used to replace
-   shortened words and invalid characters, to
-   add additional space between paragraphs, and to
-   add a "\" before certain characters to make them
-   readable by the LaTeX file. Modify this list as
-   needed.
-
-5. The "Members.csv" file contains your branch's
-   membership numbers, past and current. Each
-   meeting, simply enter the date and numbers into
-   a new collumn. This will be used to report on
-   both current numbers, and the change since last
-   meeting.
+5. Use the "Generate PDF" option to generate a pre-
+   formatted PDF document containing the meeting's
+   minutes.
 
 6. *optional* the "reports" folder contains a
    template for officer/committee reports. If you
@@ -75,26 +46,14 @@ Notes:
    minutes, place them here as .txt files in the
    format provided.
 
-7. Run the "latexgen.py" file. This will generate a
-   .tex file labeled "[date] - [meeting name].tex".
+7. *optional* for easy cleanup, use the Archive option
+   to move all created files to the "old" folder.
 
-8. Open that file in your preferred LaTeX editor. It
-   is already formatted for you. Have it generate a
-   PDF, and done! Alt-text has been added for the
-   IWW logo and for membership visualizations.
-
-   NOTE: if you ran latexgen on a different date
-         from the meeting itself, you will need to
-	 edit the date in the LaTeX file to reflect
-	 the true meeting date.
-
-9. *optional* for easy cleanup, run the "archive.py"
-   file. This will add the date to the filename of
-   all generated files and move them to the "old"
-   folder.
-
-10.Change any resolved items to TRUE in the
-   "resolved" collumn in "items.csv".
+8. For each item in the Agenda, click the Resolved
+   button on the right if it was resolved. This will
+   cause it to not appear in future agendas. Resolved
+   items can be accessed and restored from the
+   "Resolved" tab in Agenda.
 
 ******************************************************
 		    Troubleshooting
@@ -130,6 +89,4 @@ A: Not yet implemented. You'll need to change it
 
 - Other languages??!
 
-- implement resolved option
-
-- UI/user friendliness
+- Ability to add items during meeting
