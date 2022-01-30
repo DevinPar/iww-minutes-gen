@@ -1,17 +1,26 @@
 import csv
 import os
 
-def Item_Rows_Current(Items):
+def Item_Rows(Items_Dict, key, default):
 
-    Items_Dict = Items
     column = {}
 
-    column["New Item"] = {"section": "new", "name": "", "date": "dd/mm/yyyy", "motion": "FALSE", "event": "FALSE", "fw": "", "resolved": "FALSE"}
+    column["New"] = default
     
     for item in Items_Dict:
     
-        column[item["name"]] = item
+        column[item[key]] = item
 
+    return column
+
+def Member_Rows(Members):
+
+    column = {}
+    
+    for item in Members:
+    
+        column[item["date"]] = item
+        
     return column
 
 def Interwob_Login():
@@ -68,15 +77,15 @@ def Csv_to_Dict(File_Name):
 
     return Dict
 
-def Dict_to_Csv(Dict, File_Name):
+def Dict_to_Csv(Dict, File_Name, keys):
 
     with open (File_Name, 'w') as fp:
     
-        fp.write('section,name,date,motion,event,fw,resolved\n')
+        fp.write(keys + '\n')
     
         for key, value in Dict.items():
             
-            if key == "New Item":
+            if key == "New":
             
                 continue
             

@@ -28,7 +28,11 @@ Notes:
    on "New Item" on the left, fill in the boxes on the
    right, and click "Save".
 
-4. Use the "Generate HTML" option to generate an HTML
+4. Use the Membership/Finances option to log each month's
+   membership and finances, which will be displayed on
+   the front page of your minutes.
+
+5. Use the "Generate HTML" option to generate an HTML
    file which will serve as your minutes note-pad.
    Simply send the file to the note-taker and have them
    fill it out during the meeting. When they are done,
@@ -36,20 +40,20 @@ Notes:
    and send you the resulting "[DATE]RAW.py" file. Place
    this file in the same folder as Run.exe.
 
-5. Use the "Generate PDF" option to generate a pre-
+6. Use the "Generate PDF" option to generate a pre-
    formatted PDF document containing the meeting's
    minutes.
 
-6. *optional* the "reports" folder contains a
+7. *optional* the "reports" folder contains a
    template for officer/committee reports. If you
    want these included in their own section of the
    minutes, place them here as .txt files in the
    format provided.
 
-7. *optional* for easy cleanup, use the Archive option
+8. *optional* for easy cleanup, use the Archive option
    to move all created files to the "old" folder.
 
-8. For each item in the Agenda, click the Resolved
+9. For each item in the Agenda, click the Resolved
    button on the right if it was resolved. This will
    cause it to not appear in future agendas. Resolved
    items can be accessed and restored from the

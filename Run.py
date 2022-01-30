@@ -22,21 +22,29 @@ else:
 
     Default_Note = Info["Notes"]
     
-Items_Dict = Item_Rows_Current(Csv_to_Dict("items.csv"))
+Items_Dict = Item_Rows(Csv_to_Dict("items.csv"), "name", {"section": "new", "name": "", "date": "dd/mm/yyyy", "motion": "FALSE", "event": "FALSE", "fw": "", "resolved": "FALSE"})
 
 Current_List = List_Item_Keys(Items_Dict, "resolved", "FALSE")
 
 Old_List = List_Item_Keys(Items_Dict, "resolved", "TRUE")
 
+Members_Dict = Item_Rows(Csv_to_Dict("Members.csv"), "date", {"date": "dd/mm/yyyy", "total": "", "good": "", "bad": ""})
+
+Member_List = List_Item_Keys(Members_Dict)
+
+#Finances_Dict = Item_Rows(Csv_to_Dict("Finances.csv"), "date", {"date": "dd/mm/yyyy", 
+
 Welcome = [
     [sg.Text("Welcome to the IWW Minutes Generator! \n Please select an option below to get started:")], 
     [sg.Button("Setup Options")], 
     [sg.Button("Agenda Items")], 
+    [sg.Button("Membership/Finances")],
     [sg.Button("Generate HTML")], 
     [sg.Button("Generate PDF")], 
     [sg.Button("Archive")], 
     [sg.Button("Help")],
-    [sg.Button("Test")]]
+    [sg.Button("Test", disabled = True)]
+    ]
 
 Test = [
     [sg.Button("Test1")],
@@ -62,15 +70,21 @@ Agenda = [
             [[sg.Listbox(values = Old_List, size = (50, 50), enable_events=True, key = '-Selected_Old-')]])]
     ])]]
 
+Membership = [
+    [sg.TabGroup(
+        [[sg.Tab('Membership', 
+            [[sg.Listbox(values = Member_List, size = (50, 50), enable_events=True, key = '-Selected_Membership-')]]),
+        sg.Tab('Finances', 
+            [[sg.Listbox(values = ["Not Yet Implemented"], size = (50, 50), enable_events=True, key = '-Selected_Finances-')]])]
+    ])]]
+    
 Html_gen = [
-    [sg.Text("Clicking 'Generate' below will create a file called RAW.html. To use, just send the RAW file to your note-taker to open in a browser.")],
     [sg.Button("Generate HTML", key = "Generate_HTML")],
     [sg.Button("Generate Agenda", key = "Generate_Agenda")],
     [sg.Button("Generate Both", key = "Generate_Both")]
     ]
     
 Pdf_gen = [
-    [sg.Text("fubar")],
     [sg.Button("Generate", key = "Generate_PDF")]
     ]
     
@@ -80,18 +94,70 @@ Archive = [
     ]
 
 Help = [
-    []
+    [sg.Text("""Use the Setup option to fill in basic information,
+such as the name of your branch/committee, and the
+word you use for Note-Taker. Checking "Random" will
+use a randomly chosen synonym for note-taker each
+time you run the program.
+
+
+Use the Agenda option to add, modify, or remove items
+from the next meeting's agenda. To add an item, click
+on "New Item" on the left, fill in the boxes on the
+right, and click "Save".
+
+
+Use the Membership/Finances option to log each month's
+membership and finances, which will be displayed on
+the front page of your minutes.
+
+
+Use the "Generate HTML" option to generate an HTML
+file which will serve as your minutes note-pad.
+Simply send the file to the note-taker and have them
+fill it out during the meeting. When they are done,
+they should press the "Generate" button at the bottom
+and send you the resulting "[DATE]RAW.py" file. Place
+this file in the same folder as Run.exe.
+
+
+Use the "Generate PDF" option to generate a pre-
+formatted PDF document containing the meeting's
+minutes.""")
+]
     ]
 
 Col2_Welcome = [
-    []
+    [sg.Text("""Setup Option:
+Choose basic settings such as committee name 
+and Note-Taker title.
+
+Agenda Items:
+Add, change, and delete items from the Agenda. All
+items in the "Current" tab will be automatically
+added to your meeting minutes.
+
+Membership/Finances:
+Log your membership numbers and finances each month
+to be displayed on your minutes.
+
+Generate HTML:
+Generates your Agenda and Minutes files. Send to your 
+Note-Taker to serve as a note-pad.
+
+Generate PDF:
+Generates a final pre-formatted PDF file using minutes
+created from the HTML.
+
+Archive:
+Easily date and archive all created files.""")]
     ]
 
 Col2_Setup = [
     []
     ]
 
-Selected_Item = Items_Dict["New Item"]
+Selected_Item = Items_Dict["New"]
 
 Col2_Agenda = [
     [sg.Text("Name of Item")],
@@ -110,8 +176,30 @@ Col2_Agenda = [
     [sg.Button("Delete", key = "-Delete_Item-", visible = True)]
     ]
     
+Selected_Membership  = Members_Dict["New"]
+    
+Col2_Membership = [
+    [sg.Text("Date"),
+    sg.Input(Selected_Membership["date"], key = 'Member-0-')],
+    [sg.Text("Total Members"),
+    sg.Input(Selected_Membership["total"], key = 'Member-1-')],
+    [sg.Text("Good Standing"),
+    sg.Input(Selected_Membership["good"], key = 'Member-2-')],
+    [sg.Text("Bad Standing"),
+    sg.Input(Selected_Membership["bad"], key = 'Member-3-')],
+    [sg.Button("Save", key = "-Save_Membership-")],
+    [sg.Button("Delete", key = "-Delete_Membership-", visible = True)]
+    ]
+    
 Col2_Html_gen = [
-    []
+    [sg.Text("""Generate HTML: Generates a .html file. Send this file to 
+the Note-Taker prior to or during a meeting to fill out.
+To use, simply open the file in a browser, fill in the 
+fields with minutes, and press "Generate" at the bottom. 
+Have the Note-Taker send this new file back to you.""")],
+    [sg.Text("""Generate Agenda: Generates a .txt text file 
+containing the meeting agenda.""")],
+    [sg.Text("Generate Both: Generates both above files.")]
     ]
     
 Col2_Pdf_gen = [
@@ -123,7 +211,21 @@ Col2_Archive = [
     ]
     
 Col2_Help = [
-    []
+    [sg.Text("""*optional* the "reports" folder contains a
+template for officer/committee reports. If you
+want these included in their own section of the
+minutes, place them here as .txt files in the
+format provided.
+    
+*optional* for easy cleanup, use the Archive option
+to move all created files to the "old" folder.
+
+For each item in the Agenda, click the Resolved
+button on the right if it was resolved. This will
+cause it to not appear in future agendas. Resolved
+items can be accessed and restored from the
+"Resolved" tab in Agenda.""")
+    ]
     ]
     
 Col2_Test = [
@@ -137,6 +239,7 @@ layout = [
             sg.Column(Welcome, key = '-Welcome-'), 
             sg.Column(Setup, visible = False, key = '-Setup Options-'),
             sg.Column(Agenda, visible = False, key = '-Agenda Items-'),
+            sg.Column(Membership, visible = False, key = '-Membership/Finances-'),
             sg.Column(Html_gen, visible = False, key = '-Generate HTML-'),
             sg.Column(Pdf_gen, visible = False, key = '-Generate PDF-'),
             sg.Column(Archive, visible = False, key = '-Archive-'),
@@ -149,6 +252,7 @@ layout = [
             sg.Column(Col2_Welcome, visible = True, key = 'Col2_-Welcome-'),
             sg.Column(Col2_Setup, visible = False, key = 'Col2_-Setup Options-'),
             sg.Column(Col2_Agenda, visible = False, key = 'Col2_-Agenda Items-'),
+            sg.Column(Col2_Membership, visible = False, key = 'Col2_-Membership/Finances-'),
             sg.Column(Col2_Html_gen, visible = False, key = 'Col2_-Generate HTML-'),
             sg.Column(Col2_Pdf_gen, visible = False, key = 'Col2_-Generate PDF-'),
             sg.Column(Col2_Archive, visible = False, key = 'Col2_-Archive-'),
@@ -164,7 +268,8 @@ def Main_Menu():
     
     layout = 'Welcome'
     
-    Selected_Item = Items_Dict["New Item"]
+    Selected_Item = Items_Dict["New"]
+    Selected_Membership  = Members_Dict["New"]
     
     while True:
         
@@ -249,14 +354,15 @@ def Main_Menu():
                 window['Agenda-5-'].update(disabled=False)
                 
                 window['-Resolved-'].update(visible=True)
+                window['-Resolved_Button-'].update(disabled=False)
                 window['-Unresolved-'].update(visible=False)
                 window['-Save_Item-'].update(disabled=False)
                 window['-Delete_Item-'].update(disabled=False)
                 
                 if Selected_Item['name'] == '':
                 
-                    window['-Resolved-'].update(visible=False)
-                    window['-Delete_Item-'].update(visible=False)
+                    window['-Resolved_Button-'].update(disabled=True)
+                    window['-Delete_Item-'].update(disabled=True)
 
             elif event == "-Selected_Old-":
             
@@ -283,7 +389,7 @@ def Main_Menu():
                 if Selected_Item['name'] == '':
                 
                     window['-Unresolved-'].update(visible=False)
-                    window['-Delete_Item-'].update(visible=False)
+                    window['-Delete_Item-'].update(disabled=True)
             
             elif event == '-Save_Item-':
             
@@ -305,7 +411,7 @@ def Main_Menu():
                         
                             Motion_Temp = "FALSE"
                 
-                    if Selected_Item == Items_Dict["New Item"]:
+                    if Selected_Item == Items_Dict["New"]:
                    
                         Items_Dict[values['Agenda-0-']] = {
                         
@@ -345,7 +451,7 @@ def Main_Menu():
                       
                     window['-Selected_Item-'].update(Current_List)
                     
-                    Dict_to_Csv(Items_Dict, "items.csv")
+                    Dict_to_Csv(Items_Dict, "items.csv", "section,name,date,motion,event,fw,resolved")
                     
             elif event == '-Resolved_Button-' and Selected_Item['name'] != '':            
             
@@ -358,9 +464,9 @@ def Main_Menu():
                 window['-Selected_Item-'].update(Current_List)
                 window['-Selected_Old-'].update(Old_List)
                 
-                Dict_to_Csv(Items_Dict, "items.csv")
+                Dict_to_Csv(Items_Dict, "items.csv", "section,name,date,motion,event,fw,resolved")
                 
-                Selected_Item = Items_Dict["New Item"]
+                Selected_Item = Items_Dict["New"]
                 window['Agenda-0-'].update(Selected_Item["name"])
                 window['Agenda-1-'].update(Selected_Item["date"])
                 window['Agenda-2-'].update(Selected_Item["section"])
@@ -382,7 +488,7 @@ def Main_Menu():
                 window['-Selected_Item-'].update(Current_List)
                 window['-Selected_Old-'].update(Old_List)
                 
-                Dict_to_Csv(Items_Dict, "items.csv")
+                Dict_to_Csv(Items_Dict, "items.csv", "section,name,date,motion,event,fw,resolved")
 
                 if len(Old_List) > 0:
                 
@@ -393,7 +499,7 @@ def Main_Menu():
                     
                 else:
                 
-                    Selected_Item = Items_Dict["New Item"]
+                    Selected_Item = Items_Dict["New"]
                     window['-Resolved-'].update(visible=True)
                     window['-Unresolved-'].update(visible=False)
                     window['-Save_Item-'].update(visible=True)
@@ -404,7 +510,59 @@ def Main_Menu():
                 window['Agenda-3-'].update(Selected_Item["motion"]==True)
                 window['Agenda-4-'].update(Selected_Item["event"]==True)
                 window['Agenda-5-'].update(Selected_Item["fw"])
+            
+            elif event == '-Delete_Item-' and Selected_Item['name'] != '':
+            
+                Items_Dict.pop(Selected_Item["name"])
+                Current_List.remove(Selected_Item["name"])
+                Selected_Item = Items_Dict[values['Agenda-0-']]
+            
+        elif layout == 'Membership/Finances':
+        
+            if event == "-Selected_Membership-":
+
+                Selected_Membership = Members_Dict[values["-Selected_Membership-"][0]]
+                window['Member-0-'].update(Selected_Membership["date"])
+                window['Member-1-'].update(Selected_Membership["total"])
+                window['Member-2-'].update(Selected_Membership["good"])
+                window['Member-3-'].update(Selected_Membership["bad"])
                 
+                if Selected_Membership['date'] == "dd/mm/yyyy":
+                    window['Member-1-'].update(disabled=False)
+                    window['Member-2-'].update(disabled=False)
+                    window['Member-3-'].update(disabled=False)
+                    window['-Save_Membership-'].update(disabled=False)
+                    window['-Delete_Membership-'].update(disabled=True)
+                    
+                else:
+                
+                    window['Member-1-'].update(disabled=True)
+                    window['Member-2-'].update(disabled=True)
+                    window['Member-3-'].update(disabled=True)
+                    window['-Save_Membership-'].update(disabled=True)
+                    window['-Delete_Membership-'].update(disabled=False)
+           
+            elif event == "-Save_Membership-":
+            
+                if values["Member-0-"] != "dd/mm/yyyy":
+      
+                    Members_Dict[values['Member-0-']] = {
+                            
+                        "date": values['Member-0-'],
+                        "total": values['Member-1-'],
+                        "good": values['Member-2-'],
+                        "bad": values['Member-3-'],
+                        }
+                                
+                    Member_List.insert(1, values['Member-0-'])
+                
+                    Selected_Membership = Members_Dict[values['Member-0-']]
+                    
+                    window['-Selected_Membership-'].update(Member_List)
+                    
+                    Dict_to_Csv(Members_Dict, "Members.csv", "date,total,good,bad")
+                    
+           
         elif layout == 'Generate HTML':
         
             if event == "Generate_HTML":
@@ -466,7 +624,7 @@ def Main_Menu():
     
                         Current_List.append(key)
                 print(Current_List)
-                Selected_Item = Items_Dict["New Item"]
+                Selected_Item = Items_Dict["New"]
 
                 window['-Selected_Item-'].update(Current_List)
                 window['-Selected_Old-'].update(Old_List)

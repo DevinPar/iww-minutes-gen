@@ -1,0 +1,446 @@
+
+      
+
+      
+        <head>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script>var $j = jQuery.noConflict();</script>
+
+        Test <br>
+        Meeting Minutes Form 2022-01-29
+
+    </head>
+
+    <body>
+        
+        <style>
+
+            table {
+              border: 1px solid black;
+              padding: 0.5em;
+              margin: 1em;
+            }
+
+            label {
+              display: block;
+              margin: 1em;
+            }
+        
+        </style>
+        
+            <table id="people">
+                <tr>
+                  <td>Present</td>
+                  <td>    
+                  <button id="add-person">
+                    Add
+                  </button>
+                  </td>
+                </tr>
+            </table>
+
+        <!-- </form>	 -->
+        <label for="starthour">Start Time:</label>
+        <select name="starthour" id="starthour" placeholder="6">
+            <option value = "00">00</option>
+            <option value = "01">01</option>
+            <option value = "02">02</option>
+            <option value = "03">03</option>
+            <option value = "04">04</option>
+            <option value = "05">05</option>
+            <option value = "06">06</option>
+            <option value = "07">07</option>
+            <option value = "08">08</option>
+            <option value = "09">09</option>
+            <option value = "10">10</option>
+            <option value = "11">11</option>
+            <option value = "12">12</option>
+            <option value = "13">13</option>
+            <option value = "14">14</option>
+            <option value = "15">15</option>
+            <option value = "16">16</option>
+            <option value = "17">17</option>
+            <option value = "18">18</option>
+            <option value = "19">19</option>
+            <option value = "20">20</option>
+            <option value = "21">21</option>
+            <option value = "22">22</option>
+            <option value = "23">23</option>
+        </select>:
+        <select name="startminute" id="startminute" placeholder="30">
+            <option value = "00">00</option>
+            <option value = "05">05</option>
+            <option value = "10">10</option>
+            <option value = "15">15</option>
+            <option value = "20">20</option>
+            <option value = "25">25</option>
+            <option value = "30">30</option>
+            <option value = "35">35</option>
+            <option value = "40">40</option>
+            <option value = "45">45</option>
+            <option value = "50">50</option>
+            <option value = "55">55</option>
+        </select>
+        <br>
+        
+        <label for="reconotes">Recognitions:</label>
+        <textarea id="reconotes" name="reconotes"
+        rows="10" cols="66" placeholder = "Type notes here"></textarea>
+        
+        <label for="annonotes">Announcements:</label>
+        <textarea id="annonotes" name="annonotes"
+        rows="10" cols="66" placeholder = "Type notes here"></textarea>
+        
+        <br><br>
+        
+        	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+        Old Business
+        
+        <br>
+        
+           <label for="old01notes"><b>Fundraiser</b> (FW Fu)<br>
+First Presented 10/01/1001<br>
+</label>
+
+   <textarea id="old01notes" name="old01notes" rows="10" cols="66" placeholder = "Type notes here"></textarea><br>
+
+<textarea id="old01comment" name="old01comment" rows="3" cols="66" placeholder = "Comments for the minutes"></textarea><br>
+
+	
+        Was this item resolved? (wont appear in future meetings) <br>
+        
+        <select name="old01resolved" id="old01resolved" placeholder = "">
+
+            <option value="FALSE">No</option>
+            <option value="TRUE">Yes</option>
+
+        </select>
+        
+        <br><br>	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+        New Business
+        
+        <br>
+        
+        
+        
+        <label for="worknotes">Workplace Updates</label>
+        <textarea id="worknotes" name="worknotes"
+            rows="10" cols="66" placeholder = "Type notes here"></textarea>
+        
+        <label for="goodnotes">Good and Welfare</label>
+        <textarea id="goodnotes" name="goodnotes"
+            rows="10" cols="66" placeholder = "Type notes here"></textarea>
+
+        <label for="critnotes">Meeting Critique</label>
+        <textarea id="critnotes" name="critnotes"
+            rows="10" cols="66" placeholder = "Type notes here"></textarea>
+
+        <label for="miscnotes">Misc. Notes:</label>
+        <textarea id="miscnotes" name="miscnotes"
+        rows="10" cols="66" placeholder = "Type notes here"></textarea>
+
+        <label for="endhour">End Time:</label>
+        <select name="endhour" id="endhour" placeholder="6">
+            <option value = "00">00</option>
+            <option value = "01">01</option>
+            <option value = "02">02</option>
+            <option value = "03">03</option>
+            <option value = "04">04</option>
+            <option value = "05">05</option>
+            <option value = "06">06</option>
+            <option value = "07">07</option>
+            <option value = "08">08</option>
+            <option value = "09">09</option>
+            <option value = "10">10</option>
+            <option value = "11">11</option>
+            <option value = "12">12</option>
+            <option value = "13">13</option>
+            <option value = "14">14</option>
+            <option value = "15">15</option>
+            <option value = "16">16</option>
+            <option value = "17">17</option>
+            <option value = "18">18</option>
+            <option value = "19">19</option>
+            <option value = "20">20</option>
+            <option value = "21">21</option>
+            <option value = "22">22</option>
+            <option value = "23">23</option>
+        </select>:
+        <select name="endminute" id="endminute" placeholder="30">
+            <option value = "00">00</option>
+            <option value = "05">05</option>
+            <option value = "10">10</option>
+            <option value = "15">15</option>
+            <option value = "20">20</option>
+            <option value = "25">25</option>
+            <option value = "30">30</option>
+            <option value = "35">35</option>
+            <option value = "40">40</option>
+            <option value = "45">45</option>
+            <option value = "50">50</option>
+            <option value = "55">55</option>
+        </select>
+        <br><br>
+        
+        <table id="extraItems">
+                <tr>
+                  <td>Extra Items</td>
+                  <td>    
+                  <button id="add-item">
+                    Add
+                  </button>
+                  </td>
+                </tr>
+            </table>
+        
+        <button id="generate">
+            Generate
+        </button>
+
+        <pre id="output">
+          
+        </pre>
+        
+    </body>
+
+    <script>
+
+    function $(query) {
+    return document.querySelector(query)
+    }
+
+    extraCounter = 0
+
+    const $people = $("#people")
+    const $addPersonButton = $('#add-person')
+
+    const $extraItems = $('#extraItems')
+    const $addItemButton = $('#add-item')
+
+    const $output = $('#output')
+    const $generate = $('#generate')
+
+    $addPersonButton.onclick = addPerson
+    $addItemButton.onclick = addItem
+    $generate.onclick = generateOutput
+
+    function addPerson() {
+      const row = document.createElement('tr')
+      row.innerHTML = `
+      <td>
+        <input placeholder="Name">
+      </td>
+      
+      <select name="role" id="role" placeholder = "Role">
+        <option value="null"></option>
+        <option value="chair">Chair</option>
+        <option value="sten">Wordsmith</option>
+        <option value="time">Time Keeper</option>
+
+      </select>
+      
+      <td>
+        <button>X</button>
+      </td>
+      `
+      row.querySelector('button').onclick = () => {
+        $people.removeChild(row)
+      }
+      $people.appendChild(row)
+    }
+
+    function addItem() {
+      const extraRow = document.createElement('tr')
+      
+      extraRow.innerHTML = `
+      <br>
+      
+        <input name = "extra" placeholder = "Name of New Item" id = "Title">
+      
+      
+      <br><br>
+      <textarea id="notes" name="notes" rows="10" cols="66" placeholder = "Type notes here"></textarea>
+      <br>
+      Votes:<br>
+        <input name="yea" id="yea" size = 1 placeholder = Yea>
+        
+        </input>
+
+        <input name="nay" id="nay" size = 1 placeholder = Nay>
+
+        </input>
+            
+        <input name="abstain" id="abstain" size = 1 placeholder = Abs>
+
+        </input>
+        
+        <br>
+        
+        <br>
+        Was this item resolved? (wont appear in future meetings) <br>
+        <select name="resolved" id="resolved" placeholder = "">
+
+            <option value="FALSE">No</option>
+            <option value="TRUE">Yes</option>
+
+        </select>
+      
+      <td>
+        <button>X</button>
+      </td>
+      `
+      extraRow.querySelector('button').onclick = () => {
+        $extraItems.removeChild(extraRow)
+        extraCounter -= 1
+      }
+      $extraItems.appendChild(extraRow)
+      extraCounter +=1
+    }
+
+    function today(){
+        
+        var today = new Date();
+        var dd = String(today.getDate()).padStart(2, '0');
+        var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+        var yyyy = today.getFullYear();
+        
+        today = yyyy+'-'+mm+'-'+dd;
+        return today
+    }
+
+    function download(text, filename){
+      var blob = new Blob([text], {type: "text/plain"});
+      var url = window.URL.createObjectURL(blob);
+      var a = document.createElement("a");
+      a.href = url;
+      a.download = filename;
+      a.click();
+    }
+
+    function upload(text, filename){
+        
+        var blob = new Blob([text], {type: "text/csv;charset=utf-8"});
+
+        var formData = new FormData(); 
+        formData.append("yeet", blob, filename);
+        
+        $j.ajax('upload.php', {
+            method: "POST",
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function (data) {
+                console.log(data);
+            },
+            error: function (data) {
+                console.log(data);
+            }
+        });
+        
+
+    /* 	await fetch('/upload.php', {
+            method: "POST", 
+            body: formData
+        }); 
+        alert('The file has been uploaded successfully.'); */
+        
+    }
+
+    function generateOutput () {  
+      
+      const present = [...$people.querySelectorAll('input')].map(({value})=> value)
+      
+      const roles = [...$people.querySelectorAll('select')].map(({value})=> value)
+      
+      var outtext = `
+  
+
+  
+strlist = {}
+  
+
+  
+title = "Test"
+  
+present = r"""${present}"""
+ 
+roles = r"""${roles}"""
+strlist["roles"] = roles
+
+rolelist = roles.split(",")
+presentlist = present.split (",")
+present = ""
+counter = 0
+for i in rolelist:
+  
+    if i == "chair":
+    
+        chair = presentlist[counter]
+        counter += 1
+        continue
+    
+    elif i != "null":
+        
+        presentlist[counter] = presentlist[counter] + ' (' + i + ')'
+    
+    if present != "":
+    
+        present += ', '
+    
+    present += presentlist[counter]
+    
+    counter += 1
+
+
+strlist["present"] = present
+
+strlist["starttime"] = r"""${starthour.value}""" + ":" + r"""${startminute.value}"""
+strlist["endtime"] = r"""${endhour.value}""" + ":" + r"""${endminute.value}"""
+
+reconotes = r"""${reconotes.value}"""
+
+strlist["reconotes"] = reconotes
+
+annonotes = r"""${annonotes.value}"""
+
+strlist["annonotes"] = annonotes
+
+old01notes = r"""${old01notes.value}"""
+
+strlist["old01notes"] = old01notes
+
+old01comment = r"""${old01comment.value}"""
+
+strlist["old01comment"] = old01comment
+
+old01resolved = r"""${old01resolved.value}"""
+
+strlist["old01resolved"] = old01resolved
+
+worknotes = r"""${worknotes.value}"""
+
+strlist["worknotes"] = worknotes
+
+goodnotes = r"""${goodnotes.value}"""
+
+strlist["goodnotes"] = goodnotes
+
+critnotes = r"""${critnotes.value}"""
+
+strlist["critnotes"] = critnotes
+
+miscnotes = r"""${miscnotes.value}"""
+
+strlist["miscnotes"] = miscnotes
+
+
+        
+      `  
+
+    $output.innerText = `${outtext}` 
+    download(outtext, today() + "RAW.py")
+    /* upload(outtext, today() + "RAW.py") */
+    }
+
+    </script>
