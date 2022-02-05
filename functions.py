@@ -92,8 +92,12 @@ def Dict_to_Csv(Dict, File_Name, keys):
             line = ''
 
             for key, entry in value.items():
-
-                line = line + entry + ","
+                
+                try:
+                    line = line + entry.replace(',','') + ","
+                    
+                except:
+                    line = line + entry + ","
                 
             line = line[:-1] + "\n"
             fp.write(line)

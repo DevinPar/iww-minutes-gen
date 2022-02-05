@@ -69,8 +69,8 @@ def Generate():
     if report_count == 0:
         reports = ""
 
-    Items_Dict = Csv_to_File("items.csv")
-    memlist = Csv_to_File("Members.csv")
+    Items_Dict = Csv_to_Dict("items.csv")
+    memlist = Csv_to_Dict("Members.csv")
     Replacements = {}
     # try:
         # with open('items.csv', 'r', encoding='ANSI') as file:
@@ -89,7 +89,7 @@ def Generate():
         
             # for row in list(csv_file):
         
-                Items_Dict.append(dict(row))
+                #Items_Dict.append(dict(row))
 
     try:
 
@@ -298,11 +298,11 @@ def Generate():
 
         if 'result' in item:
         
-            if item['result'][0] == 0 and item['result'][1] == 0 and item['result'][2] == 0:
+            if int(item['result'][0]) == 0 and int(item['result'][1]) == 0 and int(item['result'][2]) == 0:
             
                 item['pass'] = 'NO VOTE'
         
-            elif item['result'][0] > item['result'][1]:
+            elif int(item['result'][0]) > int(item['result'][1]):
             
                 item['pass'] = 'PASSES'
                 
@@ -371,7 +371,7 @@ def Generate():
             
     except:
         
-        chair = "Fubar"
+        chair = "None"
     
     with open(date + '_GMB-Business-Meeting-Minutes.tex', 'w') as fp:
 
